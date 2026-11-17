@@ -1,95 +1,104 @@
-# Financial Transaction Fraud Analytics
+# Financial Transaction Fraud Analytics & Risk Investigation
 
-An end-to-end data analytics and exploratory machine-learning case study using a **synthetic mobile-money transaction dataset**. The project analyses transaction patterns, examines fraud-labelled activity, evaluates a classification model, and communicates findings through a Power BI dashboard.
+An end-to-end analytics case study investigating fraud-labelled patterns in **1.72 million synthetic mobile-money transactions**. The project combines Python-based EDA, statistical testing, account-behaviour feature engineering, chronological model evaluation and an interactive Power BI dashboard.
 
-> **Scope:** This is an exploratory case study on synthetic data, not a production-ready fraud detection system.
+> **Important:** This is an exploratory case study using synthetic data. The model is not production-ready and should not be represented as an effective real-world fraud detector.
 
-## Project objectives
-- Explore transaction patterns and fraud-label distribution.
-- Analyse transaction amounts and activity across simulation steps.
-- Examine balance-mismatch patterns by fraud label.
-- Train and evaluate a classification model.
-- Present the analysis in an interactive Power BI dashboard.
+## Business questions
+- Which transaction types contain fraud-labelled records in this dataset?
+- How do transaction amounts and fraud-label rates vary?
+- Are sender or recipient balance mismatches associated with fraud labels?
+- Do account-level historical activity patterns differ?
+- How well does a model generalise to later simulation steps?
 
-## Dataset and scope
-
-The analysis focuses on the TRANSFER transaction subset.
+## Dataset
+The source dataset contains **1,720,181 transactions and 10 columns**. The analysis focuses on the **569,328 TRANSFER transactions**.
 
 | Measure | Result |
 |---|---:|
+| All transactions | 1,720,181 |
 | Transfer transactions | 569,328 |
 | Fraud-labelled transfers | 175,518 |
-| Fraud-labelled share | 30.83% |
-| Non-fraud-labelled share | 69.17% |
+| Fraud-label rate among transfers | 30.83% |
+| Fraud-label rate across all transactions | 10.20% |
 
-These figures describe this synthetic dataset and selected subset; they are not real-world fraud prevalence estimates.
+All fraud-labelled records in this supplied dataset are TRANSFER transactions. This is a property of this synthetic dataset, not a general rule about financial fraud.
 
-**Dataset-specific observation:** All fraud-labelled records in the supplied dataset are TRANSFER transactions. This should not be generalised to real mobile-money systems.
+## Key analytical findings
+- The dataset contains no missing values or exact duplicate rows in the initial quality checks.
+- Fraud labels are concentrated entirely in TRANSFER records.
+- Sender and recipient balance-mismatch indicators show statistically significant associations with fraud labels, but their Cramér's V values are small (approximately 0.038 and 0.041). Statistical significance does not imply strong predictive power or causation.
+- The fraud-label rate is 44.74% for records with a balance mismatch versus 30.05% without one in the dashboard's mismatch grouping. Treat this as a dataset-specific association.
+- Historical sender and recipient activity features are engineered from earlier simulation steps.
 
-## Workflow
-1. Data loading, inspection and preparation.
-2. Exploratory data analysis of fraud labels, transaction amounts and simulation steps.
-3. Feature engineering and preprocessing.
-4. Classification model development.
-5. Held-out test evaluation.
-6. Power BI dashboard development.
+## Modelling and evaluation
+A Random Forest classifier is evaluated using chronological train, validation and held-out test partitions.
 
-## Model evaluation
-
-Held-out test-set results:
-
-| Metric | Result |
+| Test metric | Result |
 |---|---:|
 | Accuracy | 64% |
-| Precision | 33% |
-| Recall | 22% |
-| F1-score | 0.26 |
+| Precision (fraud class) | 33% |
+| Recall (fraud class) | 22% |
+| F1-score (fraud class) | 0.26 |
 | ROC-AUC | 0.5471 |
 | PR-AUC | 0.3295 |
 
-The majority-class accuracy baseline is approximately **70.52%**. The model's accuracy is below that baseline, and its recall is low. The ROC-AUC indicates only marginal ranking ability.
+The held-out majority-class accuracy baseline is approximately **70.52%**, so the model's accuracy is below that baseline. Its recall and ranking performance are also weak. These results are reported transparently rather than presented as a successful fraud detector.
 
-**Interpretation:** The results do not support claiming that this model is an effective fraud detector. They demonstrate the importance of transparent evaluation and documenting model limitations.
+### Feature availability and leakage caution
+Balance-difference and mismatch features are derived using post-transaction balance values. These can support retrospective fraud investigation, but may not be available at transaction authorisation time. A production-oriented model would need a strictly point-in-time feature set and a fresh chronological evaluation. Historical account features in this analysis are built from prior simulation steps.
 
 ## Power BI dashboard
 
 ![Financial Transaction Fraud Analytics Dashboard](dashboard/financial_transaction_fraud_dashboard_final.png)
 
-The dashboard includes:
-- Total transfer transactions, fraudulent transactions and fraud-label rate.
-- Fraud rate across simulation steps.
-- Fraud versus non-fraud label distribution.
-- Average transaction amount by fraud status.
-- Transaction volume across simulation steps.
-- Fraud rate by balance-mismatch status.
-- Transaction-level sample table and fraud-status slicer.
+Dashboard components:
+- Transaction volume and fraud-label KPIs
+- Fraud-label distribution
+- Fraud rate over simulation steps
+- Average transaction amount by fraud label
+- Transaction volume over time
+- Fraud rate by balance-mismatch status
+- Transaction sample table and fraud-status slicer
 
-### Balance mismatch observation
+## Repository structure
+```text
+financial-transaction-fraud-detection/
+├── README.md
+├── requirements.txt
+├── data/
+│   └── README.md
+├── notebooks/
+│   └── Financial_Transaction_Fraud_Analysis_Reviewed.ipynb
+└── dashboard/
+    ├── Financial_Transaction_Fraud_Analytics_Dashboard.pbix
+    └── financial_transaction_fraud_dashboard_final.png
+```
 
-The observed fraud-label rate is 44.74% for records with a balance mismatch and 30.05% for records without one. This is an association in this synthetic dataset, not evidence of causation.
-
-## Limitations
-- The dataset is synthetic and may not represent real transaction behaviour.
-- The fraud-label distribution is dataset-specific.
-- Model performance is weak and below the majority-class accuracy baseline.
-- Post-transaction balance fields may not be available at real-time decision points.
-- Associations do not establish causal relationships.
+## Run the project
+1. Clone or download this repository.
+2. Create a `data/` folder in the repository root.
+3. Place the source file at `data/synthetic_mobile_money_transaction_dataset.csv`. The dataset itself is not included in this repository.
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. Open and run `notebooks/Financial_Transaction_Fraud_Analysis_Reviewed.ipynb` from the repository root.
 
 ## Tools
-Python · Jupyter Notebook · Pandas · NumPy · Scikit-learn · Imbalanced-learn · Matplotlib · Seaborn · Power BI
+Python · Pandas · NumPy · SciPy · Scikit-learn · Imbalanced-learn · Matplotlib · Seaborn · Jupyter Notebook · Power BI
 
-## Repository files
-
+## Project files
 - [Analysis notebook](notebooks/Financial_Transaction_Fraud_Analysis_Reviewed.ipynb)
-- [Power BI dashboard file](dashboard/Financial_Transaction_Fraud_Analytics_Dashboard.pbix)
-- [Dashboard screenshot](dashboard/financial_transaction_fraud_dashboard_final.png)
+- [Power BI dashboard](dashboard/Financial_Transaction_Fraud_Analytics_Dashboard.pbix)
+- [Dashboard preview](dashboard/financial_transaction_fraud_dashboard_final.png)
 
 ## Future improvements
-- Validate on representative real-world data where legally available.
-- Restrict predictors to information available at prediction time.
-- Compare models using stratified validation and imbalance-aware metrics.
-- Tune thresholds using the business costs of false positives and false negatives.
-- Investigate temporal validation and data leakage.
+- Rebuild the model using only features available at authorisation time.
+- Compare against simple and cost-sensitive baselines.
+- Evaluate precision-recall trade-offs using an explicit false-positive/false-negative cost framework.
+- Test on independent, representative data if available.
+- Add SQL-based analysis as a complementary analytics layer.
 
 ---
-**Project focus:** Data Analytics · Exploratory Machine Learning · Power BI
+**Project areas:** Data Analytics · Statistical Analysis · Feature Engineering · Machine Learning Evaluation · Power BI
