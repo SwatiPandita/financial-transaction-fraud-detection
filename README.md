@@ -53,6 +53,8 @@ The majority-class accuracy baseline is approximately **70.52%**. The model's ac
 
 ## Power BI dashboard
 
+![Financial Transaction Fraud Analytics Dashboard](financial_transaction_fraud_dashboard_final.png)
+
 The dashboard includes:
 - Total transfer transactions, fraudulent transactions and fraud-label rate.
 - Fraud rate across simulation steps.
@@ -76,22 +78,11 @@ The observed fraud-label rate is 44.74% for records with a balance mismatch and 
 ## Tools
 Python · Jupyter Notebook · Pandas · NumPy · Scikit-learn · Imbalanced-learn · Matplotlib · Seaborn · Power BI
 
-## Intended repository structure
+## Repository files
 
-```text
-financial-transaction-fraud-detection/
-├── README.md
-├── notebooks/
-│   └── Financial_Transaction_Fraud_Analysis.ipynb
-├── dashboard/
-│   ├── Financial_Transaction_Fraud_Analytics_Dashboard.pbix
-│   └── dashboard_screenshot.png
-├── data/
-│   └── README.md
-└── requirements.txt
-```
-
-Large or licensed datasets should not be committed. Document how to obtain the dataset in `data/README.md`.
+- [Analysis notebook](Financial_Transaction_Fraud_Analysis_Reviewed.ipynb)
+- [Power BI dashboard file](Financial_Transaction_Fraud_Analytics_Dashboard.pbix)
+- [Dashboard screenshot](financial_transaction_fraud_dashboard_final.png)
 
 ## Future improvements
 - Validate on representative real-world data where legally available.
